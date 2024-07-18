@@ -1,14 +1,6 @@
 <script setup>
 import {ref} from 'vue';
 
-const inputCode = ref('code01');
-const inputTitle = ref('タイトル');
-const inputLabel = ref('タイトルのサブラベルが入ります');
-const inputLimit = ref(100);
-const inputPreviewCounter = ref('');
-const isChecked = ref(false);
-const isOpen = ref(false);
-
 // 配列
 const inputFields = ref([
 	{
@@ -20,7 +12,7 @@ const inputFields = ref([
 		inputLimit: 100,
 		inputPreviewCounter: '',
 		isChecked: false,
-		isOpen: true,
+		isOpen: false,
 	},
 	{
 		id: 1,
@@ -31,7 +23,7 @@ const inputFields = ref([
 		inputLimit: 200,
 		inputPreviewCounter: '',
 		isChecked: false,
-		isOpen: true,
+		isOpen: false,
 	},
 	{
 		id: 2,
@@ -42,9 +34,17 @@ const inputFields = ref([
 		inputLimit: 300,
 		inputPreviewCounter: '',
 		isChecked: false,
-		isOpen: true,
+		isOpen: false,
 	},
 ]);
+
+// すべて開閉
+const toggleAll = () => {
+	const currentState = inputFields.value.every((field) => field.isOpen);
+	inputFields.value.forEach((field) => {
+		field.isOpen = !currentState;
+	});
+};
 
 console.log(inputFields);
 </script>
@@ -72,7 +72,7 @@ console.log(inputFields);
 			</div>
 		</div>
 
-		<div class="max-w-7xl mx-auto flex flex-row bg-white border border-gray-300 rounded-lg overflow-hidden">
+		<div class="max-w-7xl mx-auto flex flex-row bg-white border border-gray-300 rounded-lg overflow-hidden mb-14">
 			<!-- セット項目 -->
 			<div class="flex-shrink-0 bg-white w-80 border-r border-gray-300">
 				<!-- タイトル -->
@@ -91,7 +91,8 @@ console.log(inputFields);
 						<option value="#">段落</option>
 						<option value="#">罫線</option>
 					</select>
-					<div class="flex justify-end">
+					<div class="flex justify-end gap-3">
+						<button @click="toggleAll" type="button" class="text-sm text-gray-500">すべて開く/閉じる</button>
 						<button class="rounded py-1 px-2 text-xs bg-gray-700 text-white" type="button">フィールドを追加</button>
 					</div>
 				</div>
@@ -102,18 +103,18 @@ console.log(inputFields);
 							<p class="font-bold">テキスト（1行）</p>
 							<!-- コントローラー -->
 							<div class="ml-auto flex gap-2 items-center">
-								<buttoni id="up" type="button" class="text-sm"><i class="at-arrow-up-circle"></i></buttoni>
-								<buttoni id="down" type="button" class="text-sm"><i class="at-arrow-down-circle"></i></buttoni>
-								<buttoni id="delete" type="button" class="text-red-500 text-sm">削除</buttoni>
-								<buttoni id="open" @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
+								<button id="up" type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
+								<button id="down" type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
+								<button id="delete" type="button" class="text-red-500 text-sm">削除</button>
+								<button id="open" @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
 									{{ inputField.isOpen ? '閉じる' : '開く' }}
-								</buttoni>
+								</button>
 							</div>
 						</div>
 
 						<!-- detail -->
 						<Transition>
-							<div v-if="inputField.isOpen" id="detail" class="pl-4 pr-4 pb-4">
+							<div v-if="inputField.isOpen" id="detail" class="pl-4 pr-4">
 								<div class="mb-2">
 									<p class="text-xs text-gray-500 mb-1">タイトル</p>
 									<input v-model="inputField.inputTitle" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" placeholder="タイトル" />
@@ -126,7 +127,7 @@ console.log(inputFields);
 									<p class="text-xs text-gray-500 mb-1">コード</p>
 									<input v-model="inputField.inputCode" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" value="" placeholder="コード" />
 								</div>
-								<div class="flex gap-4">
+								<div class="flex gap-4 pb-4">
 									<div class="mb-2">
 										<p class="text-xs text-gray-500 mb-1">文字数制限</p>
 										<input v-model="inputField.inputLimit" class="border border-gray-300 rounded w-24 py-1 px-2 text-sm" type="number" placeholder="100" />
@@ -242,12 +243,15 @@ console.log(inputFields);
 <style lang="css">
 .v-enter-active,
 .v-leave-active {
-	transition: all 0.2s;
-	height: 100%;
+	transition: all 0.3s ease;
+	overflow: hidden;
 }
 .v-enter-from,
 .v-leave-to {
-	opacity: 0;
 	height: 0;
+}
+.v-enter-to,
+.v-leave-from {
+	height: 250px;
 }
 </style>
