@@ -46,6 +46,32 @@ const toggleAll = () => {
 	});
 };
 
+// 初期値を適切なオプションに合わせて設定
+const selectedFieldType = ref('text');
+
+//フィールドを追加
+const addField = () => {
+	const newId = inputFields.value.length;
+	const newField = {
+		id: newId,
+		inputType: selectedFieldType.value,
+		inputCode: `code${String(newId).padStart(2, '0')}`,
+		inputTitle: `タイトル${newId + 1}`,
+		inputLabel: `タイトルのサブラベルがはいります${newId + 1}`,
+		inputLimit: 100, // デフォルトのリミットを設定
+		inputPreviewCounter: '',
+		isChecked: false,
+		isOpen: false,
+	};
+	inputFields.value.push(newField);
+};
+
+// フィールドを削除
+const deleteField = (index) => {
+	inputFields.value.splice(index, 1);
+	// 削除後の処理を行う場合はここに追加
+};
+
 console.log(inputFields);
 </script>
 
@@ -76,37 +102,39 @@ console.log(inputFields);
 			<!-- セット項目 -->
 			<div class="flex-shrink-0 bg-white w-80 border-r border-gray-300">
 				<!-- タイトル -->
-				<div class="text-gray-500 p-4 border-b border-gray-300">
+				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white bg-white">
 					<h3 class="font-bold text-xl">セット項目</h3>
 				</div>
 
-				<div class="p-4 border-b border-gray-300">
-					<select class="border rounded py-1 px-2 w-full mb-2" name="" id="">
-						<option value="#">テキスト（1行）</option>
-						<option value="#">テキストエリア（プレーン）</option>
-						<option value="#">テキストエリア（リッチテキスト）</option>
-						<option value="#">チェックリスト</option>
-						<option value="#">ラジオボタン</option>
-						<option value="#">見出し</option>
-						<option value="#">段落</option>
-						<option value="#">罫線</option>
+				<div class="p-4 border-b border-gray-300 bg-white">
+					<select v-model="selectedFieldType" class="border rounded py-1 px-2 w-full mb-2" name="" id="">
+						<option value="text">テキスト（1行）</option>
+						<option value="textarea">テキストエリア（標準）</option>
+						<option value="textarea_rtf">テキストエリア（RTF）</option>
+						<option value="checkbox">チェックリスト</option>
+						<option value="radio">ラジオボタン</option>
+						<option value="headline">見出し</option>
+						<option value="paragraph">段落</option>
+						<option value="hr">罫線</option>
 					</select>
 					<div class="flex justify-end gap-3">
-						<button @click="toggleAll" type="button" class="text-sm text-gray-500">すべて開く/閉じる</button>
-						<button class="rounded py-1 px-2 text-xs bg-gray-700 text-white" type="button">フィールドを追加</button>
+						<button @click="toggleAll" type="button" class="text-sm text-gray-500">すべて開く / 閉じる</button>
+						<button @click="addField" class="rounded py-1 px-2 text-xs bg-gray-700 text-white" type="button">フィールドを追加</button>
 					</div>
 				</div>
 
 				<ul>
 					<li v-for="inputField in inputFields" :key="inputField.id" class="w-full border-b border-gray-300">
-						<div class="flex flex-row justify-between items-center p-4">
-							<p class="font-bold">テキスト（1行）</p>
+						<div class="flex flex-row justify-between items-center p-4 bg-white">
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold">テキスト（1行）</p>
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold">テキストエリア（標準）</p>
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold">チェックリスト</p>
 							<!-- コントローラー -->
 							<div class="ml-auto flex gap-2 items-center">
-								<button id="up" type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
-								<button id="down" type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
-								<button id="delete" type="button" class="text-red-500 text-sm">削除</button>
-								<button id="open" @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
+								<button type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
+								<button type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
+								<button @click="deleteField(index)" type="button" class="text-red-500 text-sm">削除</button>
+								<button @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
 									{{ inputField.isOpen ? '閉じる' : '開く' }}
 								</button>
 							</div>
@@ -145,7 +173,7 @@ console.log(inputFields);
 
 			<!-- プレビュー -->
 			<div class="w-full mx-auto flex-initial bg-white">
-				<div class="text-gray-500 p-4 border-b border-gray-300"><h3 class="font-bold text-xl">プレビュー</h3></div>
+				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white bg-white"><h3 class="font-bold text-xl">プレビュー</h3></div>
 
 				<div class="max-w-4xl mx-auto p-8">
 					<ul>
@@ -158,8 +186,8 @@ console.log(inputFields);
 								<p class="text-sm text-gray-400">{{ inputField.inputLabel }}</p>
 								<p class="text-sm text-gray-900">{{ inputField.inputPreviewCounter.length }} / {{ inputField.inputLimit }}文字</p>
 							</div>
-							<textarea v-if="inputField.inputType == textarea" type="textarea"></textarea>
-							<input v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 mb-1" type="text" value="" />
+							<textarea v-if="inputField.inputType === 'textarea'" type="textarea" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
+							<input v-if="inputField.inputType === 'text'" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 mb-1" type="text" value="" />
 							<div class="flex justify-end text-xs text-gray-400"><p v-text="inputField.inputCode"></p></div>
 						</li>
 					</ul>
@@ -253,5 +281,9 @@ console.log(inputFields);
 .v-enter-to,
 .v-leave-from {
 	height: 250px;
+}
+
+li:last-child {
+	border: none;
 }
 </style>
