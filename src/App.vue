@@ -102,7 +102,7 @@ console.log(inputFields);
 			<!-- セット項目 -->
 			<div class="flex-shrink-0 bg-white w-80 border-r border-gray-300">
 				<!-- タイトル -->
-				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white bg-white">
+				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white">
 					<h3 class="font-bold text-xl">セット項目</h3>
 				</div>
 
@@ -173,7 +173,7 @@ console.log(inputFields);
 
 			<!-- プレビュー -->
 			<div class="w-full mx-auto flex-initial bg-white">
-				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white bg-white"><h3 class="font-bold text-xl">プレビュー</h3></div>
+				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white"><h3 class="font-bold text-xl">プレビュー</h3></div>
 
 				<div class="max-w-4xl mx-auto p-8">
 					<ul>
