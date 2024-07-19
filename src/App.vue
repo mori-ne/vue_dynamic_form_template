@@ -27,6 +27,17 @@ const inputFields = ref([
 	},
 	{
 		id: 2,
+		inputType: 'textarea_rtf',
+		inputCode: 'code03',
+		inputTitle: 'タイトル3',
+		inputLabel: 'タイトルのサブラベルがはいります3',
+		inputLimit: 300,
+		inputPreviewCounter: '',
+		isChecked: false,
+		isOpen: false,
+	},
+	{
+		id: 3,
 		inputType: 'checkbox',
 		inputCode: 'code03',
 		inputTitle: 'タイトル3',
@@ -76,8 +87,9 @@ console.log(inputFields);
 </script>
 
 <template>
+	<!-- wrap -->
 	<div class="max-w-7xl mx-auto px-8">
-		<!-- トップ -->
+		<!-- top -->
 		<div class="mt-8 mb-4">
 			<div class="flex gap-4 border-b border-gray-300 pb-2">
 				<p class="text-lg text-gray-900 font-bold">入力項目編集画面</p>
@@ -98,14 +110,16 @@ console.log(inputFields);
 			</div>
 		</div>
 
+		<!-- content -->
 		<div class="max-w-7xl mx-auto flex flex-row bg-white border border-gray-300 rounded-lg overflow-hidden mb-14">
 			<!-- セット項目 -->
 			<div class="flex-shrink-0 bg-white w-80 border-r border-gray-300">
-				<!-- タイトル -->
+				<!-- title -->
 				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white">
 					<h3 class="font-bold text-xl">セット項目</h3>
 				</div>
 
+				<!-- select field -->
 				<div class="p-4 border-b border-gray-300 bg-white">
 					<select v-model="selectedFieldType" class="border rounded py-1 px-2 w-full mb-2" name="" id="">
 						<option value="text">テキスト（1行）</option>
@@ -123,13 +137,20 @@ console.log(inputFields);
 					</div>
 				</div>
 
+				<!-- input field -->
 				<ul>
 					<li v-for="inputField in inputFields" :key="inputField.id" class="w-full border-b border-gray-300">
 						<div class="flex flex-row justify-between items-center p-4 bg-white">
 							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold">テキスト（1行）</p>
 							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold">テキストエリア（標準）</p>
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea_rtf'" class="font-bold">テキストエリア（RTF）</p>
 							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold">チェックリスト</p>
-							<!-- コントローラー -->
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'radio'" class="font-bold">ラジオボタン</p>
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'headline'" class="font-bold">見出し</p>
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'paragraph'" class="font-bold">段落</p>
+							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'hr'" class="font-bold">罫線</p>
+
+							<!-- controller -->
 							<div class="ml-auto flex gap-2 items-center">
 								<button type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
 								<button type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
@@ -151,15 +172,20 @@ console.log(inputFields);
 									<p class="text-xs text-gray-500 mb-1">サブラベル</p>
 									<input v-model="inputField.inputLabel" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" value="" placeholder="サブラベルが入ります" />
 								</div>
-								<div class="mb-2">
-									<p class="text-xs text-gray-500 mb-1">コード</p>
-									<input v-model="inputField.inputCode" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" value="" placeholder="コード" />
+
+								<!-- checkbox -->
+								<div v-if="inputField.inputType === 'checkbox'" class="mb-2">
+									<p class="text-xs text-gray-500 mb-1">チェックリスト（1行で1つ）</p>
+									<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
 								</div>
+
 								<div class="flex gap-4 pb-4">
-									<div class="mb-2">
+									<!-- limit -->
+									<div v-if="!(inputField.inputType === 'checkbox')" class="mb-2">
 										<p class="text-xs text-gray-500 mb-1">文字数制限</p>
 										<input v-model="inputField.inputLimit" class="border border-gray-300 rounded w-24 py-1 px-2 text-sm" type="number" placeholder="100" />
 									</div>
+									<!-- required -->
 									<div class="mb-2">
 										<p class="text-xs text-gray-500 mb-1">必須</p>
 										<input v-model="inputField.isChecked" class="w-4 h-4 border-gray-400 rounded" type="checkbox" name="required" value="必須" />
@@ -173,86 +199,49 @@ console.log(inputFields);
 
 			<!-- プレビュー -->
 			<div class="w-full mx-auto flex-initial bg-white">
+				<!-- title -->
 				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white"><h3 class="font-bold text-xl">プレビュー</h3></div>
 
+				<!-- list -->
 				<div class="max-w-4xl mx-auto p-8">
 					<ul>
 						<li v-for="inputField in inputFields" :key="inputField.id" class="mb-8">
+							<!-- title / required -->
 							<div class="flex gap-2 items-center">
 								<h4 class="font-bold text-lg">{{ inputField.inputTitle }}</h4>
 								<p v-if="inputField.isChecked" class="bg-red-500 text-white text-xs inline-flex items-center justify-center py-0.5 px-2 rounded-full">必須</p>
 							</div>
+
+							<!-- label / limit -->
 							<div class="flex justify-between mb-2">
 								<p class="text-sm text-gray-400">{{ inputField.inputLabel }}</p>
-								<p class="text-sm text-gray-900">{{ inputField.inputPreviewCounter.length }} / {{ inputField.inputLimit }}文字</p>
+								<p v-if="inputField.inputType === 'text' || inputField.inputType === 'textarea' || inputField.inputType === 'textarea_rtf'" class="text-sm text-gray-900">
+									{{ inputField.inputPreviewCounter.length }} / {{ inputField.inputLimit }}文字
+								</p>
 							</div>
-							<textarea v-if="inputField.inputType === 'textarea'" type="textarea" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
-							<input v-if="inputField.inputType === 'text'" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 mb-1" type="text" value="" />
-							<div class="flex justify-end text-xs text-gray-400"><p v-text="inputField.inputCode"></p></div>
+
+							<!-- input type -->
+							<div>
+								<!-- input -->
+								<input v-if="inputField.inputType === 'text'" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 mb-1" type="text" value="" />
+								<!-- textare -->
+								<textarea v-if="inputField.inputType === 'textarea'" type="textarea" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
+								<!-- textare_rtf -->
+								<textarea
+									v-if="inputField.inputType === 'textarea_rtf'"
+									type="textarea"
+									v-model="inputField.inputPreviewCounter"
+									class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
+								<!-- checkbox -->
+								<input v-if="inputField.inputType === 'checkbox'" type="checkbox" />
+							</div>
+
+							<!-- code -->
+							<div class="flex justify-end text-xs text-gray-400">
+								<p v-text="inputField.inputCode"></p>
+							</div>
 						</li>
 					</ul>
-
-					<!-- textarea -->
-					<!-- <div class="mb-8">
-						<div class="flex gap-2 items-center">
-							<h4 class="font-bold text-lg">{{ inputTitle }}</h4>
-							<p v-if="isChecked" class="bg-red-500 text-white text-xs inline-flex items-center justify-center py-0.5 px-2 rounded-full">必須</p>
-						</div>
-						<div class="flex justify-between mb-2">
-							<p class="text-sm text-gray-400">{{ inputLabel }}</p>
-							<p class="text-sm text-gray-900">{{ inputPreviewCounter.length }} / {{ inputLimit }}文字</p>
-						</div>
-						<textarea v-model="inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 h-32" type="text" value="" />
-						<div class="flex justify-end text-xs text-gray-400"><p v-text="inputCode"></p></div>
-					</div> -->
-
-					<!-- card -->
-					<!-- <div class="mb-8">
-						<div class="flex gap-2 items-center">
-							<h4 class="font-bold text-lg">所属</h4>
-						</div>
-						<div class="flex justify-between mb-2">
-							<p class="text-sm text-gray-400">所属機関名のサブラベルが入ります</p>
-						</div>
-						<div class="flex gap-5">
-							<div class="flex gap-2">
-								<input type="checkbox" name="" id="" />
-								<label for="">医者</label>
-							</div>
-							<div class="flex gap-2">
-								<input type="checkbox" name="" id="" />
-								<label for="">研修医</label>
-							</div>
-							<div class="flex gap-2">
-								<input type="checkbox" name="" id="" />
-								<label for="">看護師</label>
-							</div>
-						</div>
-					</div> -->
-
-					<!-- card -->
-					<!-- <div class="mb-8">
-						<div class="flex gap-2 items-center">
-							<h4 class="font-bold text-lg">カテゴリー</h4>
-						</div>
-						<div class="flex justify-between mb-2">
-							<p class="text-sm text-gray-400">カテゴリーのサブラベルが入ります</p>
-						</div>
-						<div class="flex gap-5">
-							<div class="flex gap-2">
-								<input type="radio" name="radio" id="" />
-								<label for="">コメディカル</label>
-							</div>
-							<div class="flex gap-2">
-								<input type="radio" name="radio" id="" />
-								<label for="">なんとかかんとか</label>
-							</div>
-							<div class="flex gap-2">
-								<input type="radio" name="radio" id="" />
-								<label for="">ああだこうだ</label>
-							</div>
-						</div>
-					</div> -->
 
 					<!-- <hr class="my-8 border-gray-300" /> -->
 				</div>
