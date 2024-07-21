@@ -285,7 +285,7 @@ const deleteField = (id) => {
 								<div v-if="inputField.inputType === 'checkbox'" class="mb-2">
 									<div>
 										<p class="text-xs text-gray-500 mb-1">チェックリスト（1行で1つ）</p>
-										<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
+										<textarea v-model="inputField.inputContent" class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
 									</div>
 								</div>
 
@@ -410,11 +410,11 @@ const deleteField = (id) => {
 			</div>
 
 			<!-- debug -->
-			<!-- <div class="w-1/2 p-4" style="font-size: 10px">
+			<div class="w-1/2 p-4" style="font-size: 10px">
 				<p style="white-space: pre-wrap">
 					{{ inputFields }}
 				</p>
-			</div> -->
+			</div>
 		</div>
 	</div>
 
