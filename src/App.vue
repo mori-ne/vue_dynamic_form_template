@@ -7,10 +7,10 @@ const inputFields = ref([
 		id: 0,
 		inputType: 'text',
 		inputCode: 'code01',
-		inputTitle: 'タイトル1',
-		inputLabel: 'タイトルのサブラベルがはいります1',
+		inputTitle: 'テキスト（1行）',
+		inputLabel: 'テキスト（1行）のサブラベルがはいります1',
 		inputLimit: 100,
-		inputPreviewCounter: '',
+		inputContent: '',
 		isChecked: false,
 		isOpen: false,
 	},
@@ -18,10 +18,10 @@ const inputFields = ref([
 		id: 1,
 		inputType: 'textarea',
 		inputCode: 'code02',
-		inputTitle: 'タイトル2',
-		inputLabel: 'タイトルのサブラベルがはいります2',
+		inputTitle: 'テキストエリア（標準）',
+		inputLabel: 'テキストエリア（標準）のサブラベルがはいります2',
 		inputLimit: 200,
-		inputPreviewCounter: '',
+		inputContent: '',
 		isChecked: false,
 		isOpen: false,
 	},
@@ -29,10 +29,10 @@ const inputFields = ref([
 		id: 2,
 		inputType: 'textarea_rtf',
 		inputCode: 'code03',
-		inputTitle: 'タイトル3',
-		inputLabel: 'タイトルのサブラベルがはいります3',
+		inputTitle: 'テキストエリア（RTF）',
+		inputLabel: 'テキストエリア（RTF）のサブラベルがはいります3',
 		inputLimit: 300,
-		inputPreviewCounter: '',
+		inputContent: '',
 		isChecked: false,
 		isOpen: false,
 	},
@@ -40,10 +40,55 @@ const inputFields = ref([
 		id: 3,
 		inputType: 'checkbox',
 		inputCode: 'code03',
-		inputTitle: 'タイトル3',
-		inputLabel: 'タイトルのサブラベルがはいります3',
+		inputTitle: 'チェックボックス',
+		inputLabel: 'チェックボックスのサブラベルがはいります3',
 		inputLimit: 300,
-		inputPreviewCounter: '',
+		inputContent: '',
+		isChecked: false,
+		isOpen: false,
+	},
+	{
+		id: 4,
+		inputType: 'radio',
+		inputCode: 'code04',
+		inputTitle: 'ラジオボタン',
+		inputLabel: 'ラジオボタンのサブラベルがはいります',
+		inputLimit: 300,
+		inputContent: '',
+		isChecked: false,
+		isOpen: false,
+	},
+	{
+		id: 5,
+		inputType: 'headline',
+		inputCode: 'code04',
+		inputTitle: '見出し',
+		inputLabel: '見出しのサブラベルがはいります',
+		inputLimit: 300,
+		inputContent: '',
+		isChecked: false,
+		isOpen: false,
+	},
+	{
+		id: 6,
+		inputType: 'paragraph',
+		inputCode: 'code04',
+		inputTitle:
+			'この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。',
+		inputLabel: '段落のサブラベルがはいります',
+		inputLimit: 300,
+		inputContent: '',
+		isChecked: false,
+		isOpen: false,
+	},
+	{
+		id: 7,
+		inputType: 'hr',
+		inputCode: 'code04',
+		inputTitle: '罫線',
+		inputLabel: '罫線のサブラベルがはいります',
+		inputLimit: 300,
+		inputContent: '',
 		isChecked: false,
 		isOpen: false,
 	},
@@ -62,7 +107,10 @@ const selectedFieldType = ref('text');
 
 //フィールドを追加
 const addField = () => {
-	const newId = inputFields.value.length;
+	// 既存フィールドの最大IDを計算
+	const maxId = inputFields.value.length > 0 ? Math.max(...inputFields.value.map((field) => field.id)) : -1;
+
+	const newId = maxId + 1;
 	const newField = {
 		id: newId,
 		inputType: selectedFieldType.value,
@@ -70,20 +118,27 @@ const addField = () => {
 		inputTitle: `タイトル${newId + 1}`,
 		inputLabel: `タイトルのサブラベルがはいります${newId + 1}`,
 		inputLimit: 100, // デフォルトのリミットを設定
-		inputPreviewCounter: '',
+		inputContent: '',
 		isChecked: false,
 		isOpen: false,
 	};
+
 	inputFields.value.push(newField);
 };
 
-// フィールドを削除
-const deleteField = (index) => {
-	inputFields.value.splice(index, 1);
+// フィールドを削除する関数
+const deleteField = (id) => {
+	// idに基づいてフィールドを検索し、そのインデックスを取得
+	const index = inputFields.value.findIndex((field) => field.id === id);
+
+	if (index !== -1) {
+		// インデックスが見つかった場合、フィールドを削除
+		inputFields.value.splice(index, 1);
+	} else {
+		console.error(`フィールドが見つかりませんでした: id=${id}`);
+	}
 	// 削除後の処理を行う場合はここに追加
 };
-
-console.log(inputFields);
 </script>
 
 <template>
@@ -132,7 +187,7 @@ console.log(inputFields);
 						<option value="hr">罫線</option>
 					</select>
 					<div class="flex justify-end gap-3">
-						<button @click="toggleAll" type="button" class="text-sm text-gray-500">すべて開く / 閉じる</button>
+						<button @click="toggleAll" type="button" class="text-xs text-gray-500">すべて開く / すべて閉じる</button>
 						<button @click="addField" class="rounded py-1 px-2 text-xs bg-gray-700 text-white" type="button">フィールドを追加</button>
 					</div>
 				</div>
@@ -141,21 +196,24 @@ console.log(inputFields);
 				<ul>
 					<li v-for="inputField in inputFields" :key="inputField.id" class="w-full border-b border-gray-300">
 						<div class="flex flex-row justify-between items-center p-4 bg-white">
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold">テキスト（1行）</p>
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold">テキストエリア（標準）</p>
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea_rtf'" class="font-bold">テキストエリア（RTF）</p>
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold">チェックリスト</p>
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'radio'" class="font-bold">ラジオボタン</p>
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'headline'" class="font-bold">見出し</p>
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'paragraph'" class="font-bold">段落</p>
-							<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'hr'" class="font-bold">罫線</p>
+							<!-- input field title -->
+							<div>
+								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold cursor-pointer">テキスト（1行）</p>
+								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold cursor-pointer">テキストエリア（標準）</p>
+								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea_rtf'" class="font-bold cursor-pointer">テキストエリア（RTF）</p>
+								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold cursor-pointer">チェックリスト</p>
+								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'radio'" class="font-bold cursor-pointer">ラジオボタン</p>
+								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'headline'" class="font-bold cursor-pointer">見出し</p>
+								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'paragraph'" class="font-bold cursor-pointer">段落</p>
+								<p v-if="inputField.inputType === 'hr'" class="font-bold">罫線</p>
+							</div>
 
 							<!-- controller -->
 							<div class="ml-auto flex gap-2 items-center">
 								<button type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
 								<button type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
-								<button @click="deleteField(index)" type="button" class="text-red-500 text-sm">削除</button>
-								<button @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
+								<button @click="deleteField(inputField.id)" type="button" class="text-red-500 text-sm">削除</button>
+								<button v-if="!(inputField.inputType === 'hr')" @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
 									{{ inputField.isOpen ? '閉じる' : '開く' }}
 								</button>
 							</div>
@@ -164,11 +222,13 @@ console.log(inputFields);
 						<!-- detail -->
 						<Transition>
 							<div v-if="inputField.isOpen" id="detail" class="pl-4 pr-4">
+								<!-- title -->
 								<div class="mb-2">
 									<p class="text-xs text-gray-500 mb-1">タイトル</p>
 									<input v-model="inputField.inputTitle" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" placeholder="タイトル" />
 								</div>
-								<div class="mb-2">
+								<!-- sub label -->
+								<div v-if="!(inputField.inputType === 'hr')" class="mb-2">
 									<p class="text-xs text-gray-500 mb-1">サブラベル</p>
 									<input v-model="inputField.inputLabel" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" value="" placeholder="サブラベルが入ります" />
 								</div>
@@ -179,14 +239,31 @@ console.log(inputFields);
 									<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
 								</div>
 
-								<div class="flex gap-4 pb-4">
+								<!-- radio -->
+								<div v-if="inputField.inputType === 'radio'" class="mb-2">
+									<p class="text-xs text-gray-500 mb-1">ラジオボタン（1行で1つ）</p>
+									<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
+								</div>
+
+								<div v-if="!(inputField.inputType === 'hr')" class="flex gap-4 pb-4">
 									<!-- limit -->
-									<div v-if="!(inputField.inputType === 'checkbox')" class="mb-2">
+									<div
+										v-if="
+											!(
+												inputField.inputType === 'checkbox' ||
+												inputField.inputType === 'radio' ||
+												inputField.inputType === 'headline' ||
+												inputField.inputType === 'paragraph' ||
+												inputField.inputType === 'hr'
+											)
+										"
+										class="mb-2">
 										<p class="text-xs text-gray-500 mb-1">文字数制限</p>
 										<input v-model="inputField.inputLimit" class="border border-gray-300 rounded w-24 py-1 px-2 text-sm" type="number" placeholder="100" />
 									</div>
+
 									<!-- required -->
-									<div class="mb-2">
+									<div v-if="!(inputField.inputType === 'paragraph' || inputField.inputType === 'headline' || inputField.inputType === 'hr')" class="mb-2">
 										<p class="text-xs text-gray-500 mb-1">必須</p>
 										<input v-model="inputField.isChecked" class="w-4 h-4 border-gray-400 rounded" type="checkbox" name="required" value="必須" />
 									</div>
@@ -206,38 +283,63 @@ console.log(inputFields);
 				<div class="max-w-4xl mx-auto p-8">
 					<ul>
 						<li v-for="inputField in inputFields" :key="inputField.id" class="mb-8">
-							<!-- title / required -->
 							<div class="flex gap-2 items-center">
-								<h4 class="font-bold text-lg">{{ inputField.inputTitle }}</h4>
+								<!-- title -->
+								<h4 v-if="!(inputField.inputType === 'headline' || inputField.inputType === 'paragraph' || inputField.inputType === 'hr')" class="font-bold text-lg">
+									{{ inputField.inputTitle }}
+								</h4>
+
+								<!-- required -->
 								<p v-if="inputField.isChecked" class="bg-red-500 text-white text-xs inline-flex items-center justify-center py-0.5 px-2 rounded-full">必須</p>
 							</div>
 
-							<!-- label / limit -->
+							<!-- headline -->
+							<h1 v-if="inputField.inputType === 'headline'" class="text-xl font-bold mb-2">{{ inputField.inputTitle }}</h1>
+
+							<!-- paragraph -->
+							<p v-if="inputField.inputType === 'paragraph'" class="mb-2">{{ inputField.inputTitle }}</p>
+
 							<div class="flex justify-between mb-2">
-								<p class="text-sm text-gray-400">{{ inputField.inputLabel }}</p>
-								<p v-if="inputField.inputType === 'text' || inputField.inputType === 'textarea' || inputField.inputType === 'textarea_rtf'" class="text-sm text-gray-900">
-									{{ inputField.inputPreviewCounter.length }} / {{ inputField.inputLimit }}文字
-								</p>
+								<!-- label -->
+								<div v-if="!(inputField.inputType === 'hr')">
+									<p class="text-sm text-gray-400">{{ inputField.inputLabel }}</p>
+								</div>
+								<!-- limit -->
+								<div v-if="inputField.inputType === 'text' || inputField.inputType === 'textarea' || inputField.inputType === 'textarea_rtf'">
+									<p class="text-sm text-gray-900">{{ inputField.inputContent.length }} / {{ inputField.inputLimit }}文字</p>
+								</div>
 							</div>
 
 							<!-- input type -->
 							<div>
 								<!-- input -->
-								<input v-if="inputField.inputType === 'text'" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 mb-1" type="text" value="" />
+								<input v-if="inputField.inputType === 'text'" v-model="inputField.inputContent" class="w-full border rounded border-gray-300 p-2 mb-1" type="text" value="" />
+
 								<!-- textare -->
-								<textarea v-if="inputField.inputType === 'textarea'" type="textarea" v-model="inputField.inputPreviewCounter" class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
+								<textarea v-if="inputField.inputType === 'textarea'" type="textarea" v-model="inputField.inputContent" class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
+
 								<!-- textare_rtf -->
-								<textarea
-									v-if="inputField.inputType === 'textarea_rtf'"
-									type="textarea"
-									v-model="inputField.inputPreviewCounter"
-									class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
+								<!-- tiny MCEへ置き換える -->
+								<textarea v-if="inputField.inputType === 'textarea_rtf'" type="textarea" v-model="inputField.inputContent" class="w-full border rounded border-gray-300 p-2 h-32"></textarea>
+
 								<!-- checkbox -->
-								<input v-if="inputField.inputType === 'checkbox'" type="checkbox" />
+								<div v-if="inputField.inputType === 'checkbox'">
+									<input type="checkbox" />
+									<label for="checkbox">ラベル</label>
+								</div>
+
+								<!-- radio -->
+								<div v-if="inputField.inputType === 'radio'">
+									<input type="radio" />
+									<label for="radio">ラベル</label>
+								</div>
+
+								<!-- hr -->
+								<hr v-if="inputField.inputType === 'hr'" class="my-8 border-gray-400" />
 							</div>
 
 							<!-- code -->
-							<div class="flex justify-end text-xs text-gray-400">
+							<div v-if="!(inputField.inputType === 'headline' || inputField.inputType === 'paragraph' || inputField.inputType === 'hr')" class="flex justify-end text-xs text-gray-400">
 								<p v-text="inputField.inputCode"></p>
 							</div>
 						</li>
@@ -245,6 +347,12 @@ console.log(inputFields);
 
 					<!-- <hr class="my-8 border-gray-300" /> -->
 				</div>
+			</div>
+
+			<div class="w-1/2 p-4" style="font-size: 10px">
+				<p style="white-space: pre-wrap">
+					{{ inputFields }}
+				</p>
 			</div>
 		</div>
 	</div>
