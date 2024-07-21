@@ -11,8 +11,8 @@ const inputFields = ref([
 		inputLabel: 'テキスト（1行）のサブラベルがはいります1',
 		inputLimit: 100,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 	{
 		id: 1,
@@ -22,8 +22,8 @@ const inputFields = ref([
 		inputLabel: 'テキストエリア（標準）のサブラベルがはいります2',
 		inputLimit: 200,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 	{
 		id: 2,
@@ -33,8 +33,8 @@ const inputFields = ref([
 		inputLabel: 'テキストエリア（RTF）のサブラベルがはいります3',
 		inputLimit: 300,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 	{
 		id: 3,
@@ -44,8 +44,8 @@ const inputFields = ref([
 		inputLabel: 'チェックボックスのサブラベルがはいります3',
 		inputLimit: 300,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 	{
 		id: 4,
@@ -55,8 +55,8 @@ const inputFields = ref([
 		inputLabel: 'ラジオボタンのサブラベルがはいります',
 		inputLimit: 300,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 	{
 		id: 5,
@@ -66,8 +66,8 @@ const inputFields = ref([
 		inputLabel: '見出しのサブラベルがはいります',
 		inputLimit: 300,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 	{
 		id: 6,
@@ -78,8 +78,8 @@ const inputFields = ref([
 		inputLabel: '段落のサブラベルがはいります',
 		inputLimit: 300,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 	{
 		id: 7,
@@ -89,8 +89,8 @@ const inputFields = ref([
 		inputLabel: '罫線のサブラベルがはいります',
 		inputLimit: 300,
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	},
 ]);
 
@@ -119,11 +119,33 @@ const addField = () => {
 		inputLabel: `タイトルのサブラベルがはいります${newId + 1}`,
 		inputLimit: 100, // デフォルトのリミットを設定
 		inputContent: '',
-		isChecked: false,
-		isOpen: false,
+		isRequired: false,
+		isOpen: true,
 	};
 
 	inputFields.value.push(newField);
+};
+
+//フィールドを1つ上に移動
+const upField = (id) => {
+	const index = inputFields.value.findIndex((field) => field.id === id);
+	if (index > 0) {
+		// 現在のフィールドと1つ前のフィールドを入れ替える
+		[inputFields.value[index - 1], inputFields.value[index]] = [inputFields.value[index], inputFields.value[index - 1]];
+		// IDも一緒に入れ替える
+		[inputFields.value[index - 1].id, inputFields.value[index].id] = [inputFields.value[index].id, inputFields.value[index - 1].id];
+	}
+};
+
+//フィールドを1つ下に移動
+const downField = (id) => {
+	const index = inputFields.value.findIndex((field) => field.id === id);
+	if (index < inputFields.value.length - 1) {
+		// 現在のフィールドと1つ後のフィールドを入れ替える
+		[inputFields.value[index + 1], inputFields.value[index]] = [inputFields.value[index], inputFields.value[index + 1]];
+		// IDも一緒に入れ替える
+		[inputFields.value[index + 1].id, inputFields.value[index].id] = [inputFields.value[index].id, inputFields.value[index + 1].id];
+	}
 };
 
 // フィールドを削除する関数
@@ -198,23 +220,48 @@ const deleteField = (id) => {
 						<div class="flex flex-row justify-between items-center p-4 bg-white">
 							<!-- input field title -->
 							<div>
-								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold cursor-pointer">テキスト（1行）</p>
-								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold cursor-pointer">テキストエリア（標準）</p>
-								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea_rtf'" class="font-bold cursor-pointer">テキストエリア（RTF）</p>
-								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold cursor-pointer">チェックリスト</p>
-								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'radio'" class="font-bold cursor-pointer">ラジオボタン</p>
-								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'headline'" class="font-bold cursor-pointer">見出し</p>
-								<p @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'paragraph'" class="font-bold cursor-pointer">段落</p>
-								<p v-if="inputField.inputType === 'hr'" class="font-bold">罫線</p>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold cursor-pointer flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>テキスト（1行）</p>
+								</div>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold cursor-pointer flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>テキストエリア（標準）</p>
+								</div>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea_rtf'" class="font-bold cursor-pointer flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>テキストエリア（RTF）</p>
+								</div>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold cursor-pointer flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>チェックリスト</p>
+								</div>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'radio'" class="font-bold cursor-pointer flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>ラジオボタン</p>
+								</div>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'headline'" class="font-bold cursor-pointer flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>見出し</p>
+								</div>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'paragraph'" class="font-bold cursor-pointer flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>段落</p>
+								</div>
+								<div v-if="inputField.inputType === 'hr'" class="font-bold flex gap-1 items-center">
+									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+									<p>罫線</p>
+								</div>
 							</div>
 
 							<!-- controller -->
-							<div class="ml-auto flex gap-2 items-center">
-								<button type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
-								<button type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
-								<button @click="deleteField(inputField.id)" type="button" class="text-red-500 text-sm">削除</button>
-								<button v-if="!(inputField.inputType === 'hr')" @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
-									{{ inputField.isOpen ? '閉じる' : '開く' }}
+							<div class="ml-auto flex gap-1 items-center">
+								<button @click="upField(inputField.id)" type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
+								<button @click="downField(inputField.id)" type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
+								<button @click="deleteField(inputField.id)" type="button" class="text-red-500 text-sm"><i class="at-xmark-circle"></i></button>
+								<button @click="inputField.isOpen = !inputField.isOpen" type="button" class="text-gray-500 text-sm">
+									<!-- {{ inputField.isOpen ? '閉じる' : '開く' }} -->
+									<i class="at-info-circle"></i>
 								</button>
 							</div>
 						</div>
@@ -223,10 +270,11 @@ const deleteField = (id) => {
 						<Transition>
 							<div v-if="inputField.isOpen" id="detail" class="pl-4 pr-4">
 								<!-- title -->
-								<div class="mb-2">
+								<div v-if="!(inputField.inputType === 'hr')" class="mb-2">
 									<p class="text-xs text-gray-500 mb-1">タイトル</p>
 									<input v-model="inputField.inputTitle" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" placeholder="タイトル" />
 								</div>
+
 								<!-- sub label -->
 								<div v-if="!(inputField.inputType === 'hr')" class="mb-2">
 									<p class="text-xs text-gray-500 mb-1">サブラベル</p>
@@ -235,8 +283,10 @@ const deleteField = (id) => {
 
 								<!-- checkbox -->
 								<div v-if="inputField.inputType === 'checkbox'" class="mb-2">
-									<p class="text-xs text-gray-500 mb-1">チェックリスト（1行で1つ）</p>
-									<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
+									<div>
+										<p class="text-xs text-gray-500 mb-1">チェックリスト（1行で1つ）</p>
+										<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
+									</div>
 								</div>
 
 								<!-- radio -->
@@ -245,7 +295,14 @@ const deleteField = (id) => {
 									<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
 								</div>
 
-								<div v-if="!(inputField.inputType === 'hr')" class="flex gap-4 pb-4">
+								<!-- code / limit / required -->
+								<div class="flex gap-2">
+									<!-- code -->
+									<div v-if="!(inputField.inputType === 'hr')" class="mb-2 w-20">
+										<p class="text-xs text-gray-500 mb-1">コード</p>
+										<input v-model="inputField.inputCode" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="text" placeholder="code00" />
+									</div>
+
 									<!-- limit -->
 									<div
 										v-if="
@@ -257,15 +314,15 @@ const deleteField = (id) => {
 												inputField.inputType === 'hr'
 											)
 										"
-										class="mb-2">
+										class="w-16 mb-2">
 										<p class="text-xs text-gray-500 mb-1">文字数制限</p>
-										<input v-model="inputField.inputLimit" class="border border-gray-300 rounded w-24 py-1 px-2 text-sm" type="number" placeholder="100" />
+										<input v-model="inputField.inputLimit" class="border border-gray-300 rounded w-full py-1 px-2 text-sm" type="number" placeholder="100" />
 									</div>
 
 									<!-- required -->
-									<div v-if="!(inputField.inputType === 'paragraph' || inputField.inputType === 'headline' || inputField.inputType === 'hr')" class="mb-2">
+									<div v-if="!(inputField.inputType === 'paragraph' || inputField.inputType === 'headline' || inputField.inputType === 'hr')" class="mb-2 shrink-0">
 										<p class="text-xs text-gray-500 mb-1">必須</p>
-										<input v-model="inputField.isChecked" class="w-4 h-4 border-gray-400 rounded" type="checkbox" name="required" value="必須" />
+										<input v-model="inputField.isRequired" class="w-4 h-4 border-gray-400 rounded" type="checkbox" name="required" value="必須" />
 									</div>
 								</div>
 							</div>
@@ -280,7 +337,7 @@ const deleteField = (id) => {
 				<div class="text-gray-500 p-4 border-b border-gray-300 bg-white"><h3 class="font-bold text-xl">プレビュー</h3></div>
 
 				<!-- list -->
-				<div class="max-w-4xl mx-auto p-8">
+				<div class="max-w-4xl mx-auto py-8 px-24">
 					<ul>
 						<li v-for="inputField in inputFields" :key="inputField.id" class="mb-8">
 							<div class="flex gap-2 items-center">
@@ -290,7 +347,7 @@ const deleteField = (id) => {
 								</h4>
 
 								<!-- required -->
-								<p v-if="inputField.isChecked" class="bg-red-500 text-white text-xs inline-flex items-center justify-center py-0.5 px-2 rounded-full">必須</p>
+								<p v-if="inputField.isRequired" class="bg-red-500 text-white text-xs inline-flex items-center justify-center py-0.5 px-2 rounded-full">必須</p>
 							</div>
 
 							<!-- headline -->
@@ -303,10 +360,6 @@ const deleteField = (id) => {
 								<!-- label -->
 								<div v-if="!(inputField.inputType === 'hr')">
 									<p class="text-sm text-gray-400">{{ inputField.inputLabel }}</p>
-								</div>
-								<!-- limit -->
-								<div v-if="inputField.inputType === 'text' || inputField.inputType === 'textarea' || inputField.inputType === 'textarea_rtf'">
-									<p class="text-sm text-gray-900">{{ inputField.inputContent.length }} / {{ inputField.inputLimit }}文字</p>
 								</div>
 							</div>
 
@@ -338,22 +391,30 @@ const deleteField = (id) => {
 								<hr v-if="inputField.inputType === 'hr'" class="my-8 border-gray-400" />
 							</div>
 
-							<!-- code -->
-							<div v-if="!(inputField.inputType === 'headline' || inputField.inputType === 'paragraph' || inputField.inputType === 'hr')" class="flex justify-end text-xs text-gray-400">
-								<p v-text="inputField.inputCode"></p>
+							<!-- limit / code -->
+							<div class="flex">
+								<!-- limit -->
+								<div v-if="inputField.inputType === 'text' || inputField.inputType === 'textarea' || inputField.inputType === 'textarea_rtf'">
+									<p v-if="!inputField.inputLimit == 0" class="text-xs text-gray-900">{{ inputField.inputContent.length }} / {{ inputField.inputLimit }}&nbsp;文字</p>
+								</div>
+								<!-- code -->
+								<div
+									v-if="!(inputField.inputType === 'headline' || inputField.inputType === 'paragraph' || inputField.inputType === 'hr')"
+									class="flex justify-end text-xs text-gray-400 ml-auto">
+									<p v-text="inputField.inputCode"></p>
+								</div>
 							</div>
 						</li>
 					</ul>
-
-					<!-- <hr class="my-8 border-gray-300" /> -->
 				</div>
 			</div>
 
-			<div class="w-1/2 p-4" style="font-size: 10px">
+			<!-- debug -->
+			<!-- <div class="w-1/2 p-4" style="font-size: 10px">
 				<p style="white-space: pre-wrap">
 					{{ inputFields }}
 				</p>
-			</div>
+			</div> -->
 		</div>
 	</div>
 
