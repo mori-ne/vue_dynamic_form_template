@@ -587,9 +587,7 @@ const hideController = (id) => {
 									<p v-if="!inputField.inputLimit == 0" class="text-xs text-gray-900">{{ inputField.inputContent.length }} / {{ inputField.inputLimit }}&nbsp;文字</p>
 								</div>
 								<!-- code -->
-								<div
-									v-if="!(inputField.inputType === 'headline' || inputField.inputType === 'paragraph' || inputField.inputType === 'hr')"
-									class="flex justify-end text-xs text-gray-400 ml-auto">
+								<div v-if="!(inputField.inputType === 'hr')" class="flex justify-end text-xs text-gray-300 ml-auto">
 									<p v-text="inputField.inputCode"></p>
 								</div>
 							</div>
