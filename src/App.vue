@@ -1,98 +1,200 @@
 <script setup>
-import {ref} from 'vue';
+import {ref, watch} from 'vue';
 
 // 配列
 const inputFields = ref([
 	{
 		id: 0,
-		inputType: 'text',
+		inputType: 'textarea',
 		inputCode: 'code01',
+		inputTitle: 'テキストエリア（標準）',
+		inputLabel: 'テキストエリア（標準）のサブラベルがはいります2',
+		inputLimit: 100,
+		inputContent: '',
+		checkContent: '',
+		radioContent: '',
+		selectContent: '',
+		isRequired: false,
+		isOpen: false,
+		isShow: false,
+	},
+	{
+		id: 1,
+		inputType: 'text',
+		inputCode: 'code00',
 		inputTitle: 'テキスト（1行）',
 		inputLabel: 'テキスト（1行）のサブラベルがはいります1',
 		inputLimit: 100,
 		inputContent: '',
+		checkContent: '',
+		radioContent: '',
+		selectContent: '',
 		isRequired: false,
-		isOpen: true,
-	},
-	{
-		id: 1,
-		inputType: 'textarea',
-		inputCode: 'code02',
-		inputTitle: 'テキストエリア（標準）',
-		inputLabel: 'テキストエリア（標準）のサブラベルがはいります2',
-		inputLimit: 200,
-		inputContent: '',
-		isRequired: false,
-		isOpen: true,
+		isOpen: false,
+		isShow: false,
 	},
 	{
 		id: 2,
 		inputType: 'textarea_rtf',
-		inputCode: 'code03',
+		inputCode: 'code02',
 		inputTitle: 'テキストエリア（RTF）',
 		inputLabel: 'テキストエリア（RTF）のサブラベルがはいります3',
-		inputLimit: 300,
+		inputLimit: 100,
 		inputContent: '',
+		checkContent: '',
+		radioContent: '',
+		selectContent: '',
 		isRequired: false,
-		isOpen: true,
+		isOpen: false,
+		isShow: false,
 	},
 	{
 		id: 3,
 		inputType: 'checkbox',
 		inputCode: 'code03',
-		inputTitle: 'チェックボックス',
-		inputLabel: 'チェックボックスのサブラベルがはいります3',
-		inputLimit: 300,
-		inputContent: '',
+		inputTitle: 'チェックリスト',
+		inputLabel: 'チェックリストのサブラベルがはいります4',
+		inputLimit: 100,
+		inputContent: 'チェックリスト1\nチェックリスト2\nチェックリスト3\nチェックリスト4\nチェックリスト5',
+		checkContent: ['チェックリスト1', 'チェックリスト2', 'チェックリスト3', 'チェックリスト4', 'チェックリスト5'],
+		radioContent: '',
+		selectContent: '',
 		isRequired: false,
-		isOpen: true,
+		isOpen: false,
+		isShow: false,
 	},
 	{
 		id: 4,
 		inputType: 'radio',
 		inputCode: 'code04',
 		inputTitle: 'ラジオボタン',
-		inputLabel: 'ラジオボタンのサブラベルがはいります',
-		inputLimit: 300,
-		inputContent: '',
+		inputLabel: 'ラジオボタンのサブラベルがはいります5',
+		inputLimit: 100,
+		inputContent: 'ラジオボタン1\nラジオボタン2\nラジオボタン3\nラジオボタン4\nラジオボタン5',
+		checkContent: '',
+		radioContent: ['ラジオボタン1', 'ラジオボタン2', 'ラジオボタン3', 'ラジオボタン4', 'ラジオボタン5'],
+		selectContent: '',
 		isRequired: false,
-		isOpen: true,
+		isOpen: false,
+		isShow: false,
 	},
 	{
 		id: 5,
-		inputType: 'headline',
-		inputCode: 'code04',
-		inputTitle: '見出し',
-		inputLabel: '見出しのサブラベルがはいります',
-		inputLimit: 300,
-		inputContent: '',
+		inputType: 'select',
+		inputCode: 'code05',
+		inputTitle: 'セレクトリスト',
+		inputLabel: 'セレクトリストのサブラベルがはいります6',
+		inputLimit: 100,
+		inputContent: 'セレクトリスト1\nセレクトリスト2\nセレクトリスト3\nセレクトリスト4\nセレクトリスト5\nセレクトリスト6',
+		checkContent: '',
+		radioContent: '',
+		selectContent: ['セレクトリスト1', 'セレクトリスト2', 'セレクトリスト3', 'セレクトリスト4', 'セレクトリスト5', 'セレクトリスト6'],
 		isRequired: false,
-		isOpen: true,
+		isOpen: false,
+		isShow: false,
 	},
 	{
 		id: 6,
-		inputType: 'paragraph',
-		inputCode: 'code04',
-		inputTitle:
-			'この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。',
-		inputLabel: '段落のサブラベルがはいります',
-		inputLimit: 300,
+		inputType: 'headline',
+		inputCode: 'code06',
+		inputTitle: '見出し',
+		inputLabel: '見出しのサブラベルがはいります7',
+		inputLimit: 100,
 		inputContent: '',
+		checkContent: '',
+		radioContent: '',
+		selectContent: '',
 		isRequired: false,
-		isOpen: true,
+		isOpen: false,
+		isShow: false,
 	},
 	{
 		id: 7,
-		inputType: 'hr',
-		inputCode: 'code04',
-		inputTitle: '罫線',
-		inputLabel: '罫線のサブラベルがはいります',
-		inputLimit: 300,
+		inputType: 'paragraph',
+		inputCode: 'code07',
+		inputTitle: '段落',
+		inputLabel: '段落のサブラベルがはいります8',
+		inputLimit: 100,
 		inputContent: '',
+		checkContent: '',
+		radioContent: '',
+		selectContent: '',
 		isRequired: false,
-		isOpen: true,
+		isOpen: false,
+		isShow: false,
+	},
+	{
+		id: 8,
+		inputType: 'hr',
+		inputCode: 'code08',
+		inputTitle: 'タイトル9',
+		inputLabel: 'タイトルのサブラベルがはいります9',
+		inputLimit: 100,
+		inputContent: '',
+		checkContent: '',
+		radioContent: '',
+		selectContent: '',
+		isRequired: false,
+		isOpen: false,
+		isShow: false,
 	},
 ]);
+// オブジェクトの配列を宣言
+
+// デバッグ用フラグ
+const debugFlg = ref(false);
+
+// 初期値を適切なオプションに合わせて設定
+const selectedFieldType = ref('text');
+
+/***************************************************
+ * チェックボックス処理
+ ***************************************************/
+
+const convertCheckbox = (id) => {
+	// idから配列のindexを検索
+	const index = inputFields.value.findIndex((field) => field.id === id);
+	inputFields.value[id].checkContent = inputFields.value[index].inputContent;
+	inputFields.value[id].checkContent = inputFields.value[id].checkContent
+		.split(/\r?\n/)
+		.map((item) => item.trim())
+		.filter((item) => item);
+	console.log(inputFields.value[id].checkContent);
+};
+
+/***************************************************
+ * ラジオボタン処理
+ ***************************************************/
+
+const convertRadioButton = (id) => {
+	// idから配列のindexを検索
+	const index = inputFields.value.findIndex((field) => field.id === id);
+	inputFields.value[id].radioContent = inputFields.value[index].inputContent;
+	inputFields.value[id].radioContent = inputFields.value[id].radioContent
+		.split(/\r?\n/)
+		.map((item) => item.trim())
+		.filter((item) => item);
+	console.log(inputFields.value[id].radioContent);
+};
+
+/***************************************************
+ * セレクトリスト操作
+ ***************************************************/
+
+const convertSelectList = (id) => {
+	// idから配列のindexを検索
+	const index = inputFields.value.findIndex((field) => field.id === id);
+	inputFields.value[id].selectContent = inputFields.value[index].inputContent;
+	inputFields.value[id].selectContent = inputFields.value[id].selectContent
+		.split(/\r?\n/)
+		.map((item) => item.trim())
+		.filter((item) => item);
+	console.log(inputFields.value[id].selectContent);
+};
+
+/***************************************************
+ * コントロール処理
+ ***************************************************/
 
 // すべて開閉
 const toggleAll = () => {
@@ -102,15 +204,14 @@ const toggleAll = () => {
 	});
 };
 
-// 初期値を適切なオプションに合わせて設定
-const selectedFieldType = ref('text');
-
 //フィールドを追加
 const addField = () => {
 	// 既存フィールドの最大IDを計算
 	const maxId = inputFields.value.length > 0 ? Math.max(...inputFields.value.map((field) => field.id)) : -1;
 
 	const newId = maxId + 1;
+
+	// 初期値
 	const newField = {
 		id: newId,
 		inputType: selectedFieldType.value,
@@ -119,8 +220,12 @@ const addField = () => {
 		inputLabel: `タイトルのサブラベルがはいります${newId + 1}`,
 		inputLimit: 100, // デフォルトのリミットを設定
 		inputContent: '',
+		checkContent: '',
+		radioContent: '',
+		selectContent: '',
 		isRequired: false,
 		isOpen: true,
+		isShow: false,
 	};
 
 	inputFields.value.push(newField);
@@ -161,6 +266,20 @@ const deleteField = (id) => {
 	}
 	// 削除後の処理を行う場合はここに追加
 };
+
+// コントローラーの表示
+const showController = (id) => {
+	// idからインデックスを検索、取得
+	const index = inputFields.value.findIndex((field) => field.id === id);
+	inputFields.value[index].isShow = true;
+};
+
+// コントローラー非表示
+const hideController = (id) => {
+	// idからインデックスを検索、取得
+	const index = inputFields.value.findIndex((field) => field.id === id);
+	inputFields.value[index].isShow = false;
+};
 </script>
 
 <template>
@@ -170,7 +289,8 @@ const deleteField = (id) => {
 		<div class="mt-8 mb-4">
 			<div class="flex gap-4 border-b border-gray-300 pb-2">
 				<p class="text-lg text-gray-900 font-bold">入力項目編集画面</p>
-				<div class="ml-auto">
+				<div class="ml-auto flex gap-1 items-center text-sm">
+					<i class="at-arrow-left-circle"></i>
 					<a href="#">フォームに戻る</a>
 				</div>
 			</div>
@@ -183,6 +303,12 @@ const deleteField = (id) => {
 				<div class="flex flex-row items-center">
 					<p class="text-sm text-gray-400">フォーム名：</p>
 					<h2 class="text-sm text-gray-900 font-bold">演題登録</h2>
+				</div>
+
+				<!-- デバッグモード -->
+				<div class="flex items-center justify-center space-x-2 ml-auto">
+					<input v-model="debugFlg" name="debugSwitch" type="checkbox" class="w-4 h-4 border rounded-sm border-gray-300" />
+					<label for="debugSwitch" class="text-xs"> デバッグモード </label>
 				</div>
 			</div>
 		</div>
@@ -204,6 +330,7 @@ const deleteField = (id) => {
 						<option value="textarea_rtf">テキストエリア（RTF）</option>
 						<option value="checkbox">チェックリスト</option>
 						<option value="radio">ラジオボタン</option>
+						<option value="select">セレクトリスト</option>
 						<option value="headline">見出し</option>
 						<option value="paragraph">段落</option>
 						<option value="hr">罫線</option>
@@ -216,46 +343,59 @@ const deleteField = (id) => {
 
 				<!-- input field -->
 				<ul>
-					<li v-for="inputField in inputFields" :key="inputField.id" class="w-full border-b border-gray-300">
-						<div class="flex flex-row justify-between items-center p-4 bg-white">
+					<li
+						:class="{
+							'sticky top-0 bg-white': inputField.isOpen,
+							'w-full border-b border-gray-300 relative': true,
+						}"
+						v-for="inputField in inputFields"
+						:key="inputField.id"
+						v-on:mouseover="showController(inputField.id)"
+						v-on:mouseleave="hideController(inputField.id)"
+						class="w-full border-b border-gray-300">
+						<div class="flex flex-row gap-2 justify-between items-center p-4 bg-white">
 							<!-- input field title -->
-							<div>
-								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold cursor-pointer flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+							<div class="w-full">
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'text'" class="font-bold cursor-pointer flex gap-2 items-center">
 									<p>テキスト（1行）</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
-								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold cursor-pointer flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea'" class="font-bold cursor-pointer flex gap-2 items-center">
 									<p>テキストエリア（標準）</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
-								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea_rtf'" class="font-bold cursor-pointer flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'textarea_rtf'" class="font-bold cursor-pointer flex gap-2 items-center">
 									<p>テキストエリア（RTF）</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
-								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold cursor-pointer flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'checkbox'" class="font-bold cursor-pointer flex gap-2 items-center">
 									<p>チェックリスト</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
-								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'radio'" class="font-bold cursor-pointer flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'radio'" class="font-bold cursor-pointer flex gap-2 items-center">
 									<p>ラジオボタン</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
-								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'headline'" class="font-bold cursor-pointer flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'select'" class="font-bold cursor-pointer flex gap-2 items-center">
+									<p>セレクトリスト</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
+								</div>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'headline'" class="font-bold cursor-pointer flex gap-2 items-center">
 									<p>見出し</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
-								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'paragraph'" class="font-bold cursor-pointer flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
+								<div @click="inputField.isOpen = !inputField.isOpen" v-if="inputField.inputType === 'paragraph'" class="font-bold cursor-pointer flex gap-2 items-center">
 									<p>段落</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
 								<div v-if="inputField.inputType === 'hr'" class="font-bold flex gap-1 items-center">
-									<span class="w-4 text-center text-xs text-gray-300">{{ inputField.id }}</span>
 									<p>罫線</p>
+									<span class="w-4 text-center text-xs text-gray-300 ml-auto">{{ inputField.id }}</span>
 								</div>
 							</div>
 
 							<!-- controller -->
-							<div class="ml-auto flex gap-1 items-center">
+							<div v-if="inputField.isShow" class="ml-auto flex gap-2 items-center">
 								<button @click="upField(inputField.id)" type="button" class="text-sm"><i class="at-arrow-up-circle"></i></button>
 								<button @click="downField(inputField.id)" type="button" class="text-sm"><i class="at-arrow-down-circle"></i></button>
 								<button @click="deleteField(inputField.id)" type="button" class="text-red-500 text-sm"><i class="at-xmark-circle"></i></button>
@@ -268,7 +408,7 @@ const deleteField = (id) => {
 
 						<!-- detail -->
 						<Transition>
-							<div v-if="inputField.isOpen" id="detail" class="pl-4 pr-4">
+							<div v-if="inputField.isOpen" id="detail" class="pl-4 pr-4 pb-4">
 								<!-- title -->
 								<div v-if="!(inputField.inputType === 'hr')" class="mb-2">
 									<p class="text-xs text-gray-500 mb-1">タイトル</p>
@@ -285,14 +425,42 @@ const deleteField = (id) => {
 								<div v-if="inputField.inputType === 'checkbox'" class="mb-2">
 									<div>
 										<p class="text-xs text-gray-500 mb-1">チェックリスト（1行で1つ）</p>
-										<textarea v-model="inputField.inputContent" class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
+										<textarea
+											v-model="inputField.inputContent"
+											@input="convertCheckbox(inputField.id)"
+											class="w-full border rounded border-gray-300 text-sm px-2 py-1"
+											name=""
+											id=""
+											cols="10"></textarea>
 									</div>
 								</div>
 
 								<!-- radio -->
 								<div v-if="inputField.inputType === 'radio'" class="mb-2">
-									<p class="text-xs text-gray-500 mb-1">ラジオボタン（1行で1つ）</p>
-									<textarea class="w-full border rounded border-gray-300" name="" id="" cols="10"></textarea>
+									<div>
+										<p class="text-xs text-gray-500 mb-1">ラジオボタン（1行で1つ）</p>
+										<textarea
+											v-model="inputField.inputContent"
+											@input="convertRadioButton(inputField.id)"
+											class="w-full border rounded border-gray-300 text-sm px-2 py-1"
+											name=""
+											id=""
+											cols="10"></textarea>
+									</div>
+								</div>
+
+								<!-- checkbox -->
+								<div v-if="inputField.inputType === 'select'" class="mb-2">
+									<div>
+										<p class="text-xs text-gray-500 mb-1">セレクトリスト（1行で1つ）</p>
+										<textarea
+											v-model="inputField.inputContent"
+											@input="convertSelectList(inputField.id)"
+											class="w-full border rounded border-gray-300 text-sm px-2 py-1"
+											name=""
+											id=""
+											cols="10"></textarea>
+									</div>
 								</div>
 
 								<!-- code / limit / required -->
@@ -309,6 +477,7 @@ const deleteField = (id) => {
 											!(
 												inputField.inputType === 'checkbox' ||
 												inputField.inputType === 'radio' ||
+												inputField.inputType === 'select' ||
 												inputField.inputType === 'headline' ||
 												inputField.inputType === 'paragraph' ||
 												inputField.inputType === 'hr'
@@ -377,18 +546,38 @@ const deleteField = (id) => {
 
 								<!-- checkbox -->
 								<div v-if="inputField.inputType === 'checkbox'">
-									<input type="checkbox" />
-									<label for="checkbox">ラベル</label>
+									<div v-if="inputField.inputContent">
+										<div v-for="(value, index) in inputField.checkContent" :key="index" class="flex flex-wrap items-center gap-1 mb-1">
+											<input v-bind:name="'check-' + inputField.id" type="checkbox" v-bind:id="inputField.id + '-' + index" />
+											<label v-bind:for="inputField.id + '-' + index" class="text-sm">{{ value }}</label>
+										</div>
+									</div>
 								</div>
 
 								<!-- radio -->
 								<div v-if="inputField.inputType === 'radio'">
-									<input type="radio" />
-									<label for="radio">ラベル</label>
+									<div v-if="inputField.inputContent">
+										<div v-for="(value, index) in inputField.radioContent" :key="index" class="flex flex-wrap items-center gap-1 mb-1">
+											<input v-bind:name="'radio-' + inputField.id" type="radio" v-bind:id="inputField.id + '-' + index" />
+											<label v-bind:for="inputField.id + '-' + index" class="text-sm">{{ value }}</label>
+										</div>
+									</div>
+								</div>
+
+								<!-- select -->
+								<div v-if="inputField.inputType === 'select'">
+									<div v-if="inputField.inputContent">
+										<select v-bind:name="'select-' + inputField.id" class="border rounded border-gray-300 px-2 py-1 text-sm flex flex-wrap items-center gap-1 mb-1">
+											<option v-bind:for="inputField.id + '-' + index" value="selecte" class="text-sm">選択してください</option>
+											<template v-for="(value, index) in inputField.selectContent" :key="index">
+												<option v-bind:for="inputField.id + '-' + index" v-bind:value="value" class="text-sm">{{ value }}</option>
+											</template>
+										</select>
+									</div>
 								</div>
 
 								<!-- hr -->
-								<hr v-if="inputField.inputType === 'hr'" class="my-8 border-gray-400" />
+								<hr v-if="inputField.inputType === 'hr'" class="mb-8 mt-4 border-gray-400" />
 							</div>
 
 							<!-- limit / code -->
@@ -410,7 +599,7 @@ const deleteField = (id) => {
 			</div>
 
 			<!-- debug -->
-			<div class="w-1/2 p-4" style="font-size: 10px">
+			<div v-if="debugFlg" class="w-2/3 p-4 border-l border-gray-300 break-all" style="font-size: 9px">
 				<p style="white-space: pre-wrap">
 					{{ inputFields }}
 				</p>
@@ -441,7 +630,7 @@ const deleteField = (id) => {
 	height: 250px;
 }
 
-li:last-child {
+/* li:last-child {
 	border: none;
-}
+} */
 </style>
